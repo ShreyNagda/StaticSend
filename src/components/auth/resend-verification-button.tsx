@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/shared/button";
+import { AsyncButton } from "@/components/shared/async-button";
 import { Loader2, Check, AlertCircle } from "lucide-react";
 
 interface ResendVerificationButtonProps {
@@ -11,12 +11,10 @@ interface ResendVerificationButtonProps {
 export default function ResendVerificationButton({
   email,
 }: ResendVerificationButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
   const handleResend = async () => {
-    setIsLoading(true);
     setStatus("idle");
     setMessage("");
 
@@ -46,26 +44,20 @@ export default function ResendVerificationButton({
     } catch (error: any) {
       setStatus("error");
       setMessage(error.message || "Error sending email");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Button
+      <AsyncButton
         variant="secondary"
         size="sm"
         onClick={handleResend}
-        disabled={isLoading || status === "success"}
+        disabled={status === "success"}
         className="whitespace-nowrap"
+        loadingText="Sending..."
       >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-            Sending...
-          </>
-        ) : status === "success" ? (
+        {status === "success" ? (
           <>
             <Check className="mr-2 h-3 w-3" />
             Sent
@@ -73,7 +65,7 @@ export default function ResendVerificationButton({
         ) : (
           "Verify Email"
         )}
-      </Button>
+      </AsyncButton>
 
       {status === "error" && (
         <span className="text-xs text-red-600 flex items-center gap-1">

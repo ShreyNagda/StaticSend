@@ -41,7 +41,7 @@ export default function Home() {
                 submissions via email and view analytics in real-time.
               </p>
 
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex flex-col md:flex-row  items-center gap-4 mb-8">
                 <Link href="/auth/register">
                   <Button
                     variant="primary"
