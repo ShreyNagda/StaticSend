@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/shared/button";
+import { AsyncButton } from "@/components/shared/async-button";
 import { Loader2, Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 interface TestFormButtonProps {
   formId: string;
@@ -15,14 +15,12 @@ export default function TestFormButton({
   formId,
   isActive,
 }: TestFormButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const router = useRouter();
 
   const handleTestSubmission = async () => {
     if (!isActive) return;
 
-    setIsLoading(true);
     setStatus("idle");
 
     try {
@@ -59,23 +57,20 @@ export default function TestFormButton({
       setTimeout(() => {
         setStatus("idle");
       }, 3000);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Button
+      <AsyncButton
         variant="secondary"
         onClick={handleTestSubmission}
-        disabled={isLoading || !isActive}
+        disabled={!isActive}
         className="gap-2"
         title={!isActive ? "Form is disabled" : "Send a test submission"}
+        loadingText="Send Test"
       >
-        {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : status === "success" ? (
+        {status === "success" ? (
           <CheckCircle2 className="h-4 w-4 text-green-600" />
         ) : status === "error" ? (
           <AlertCircle className="h-4 w-4 text-red-600" />
@@ -87,7 +82,7 @@ export default function TestFormButton({
           : status === "error"
           ? "Failed"
           : "Send Test"}
-      </Button>
+      </AsyncButton>
     </div>
   );
 }

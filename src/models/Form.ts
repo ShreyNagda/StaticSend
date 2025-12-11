@@ -19,6 +19,10 @@ const FormSchema = new Schema(
         type: Boolean,
         default: true,
       },
+      notificationEmails: {
+        type: [String],
+        default: [],
+      },
     },
     isActive: {
       type: Boolean,
