@@ -15,13 +15,26 @@ StaticSend allows you to collect form submissions from your static websites with
 
 ## Technologies Used
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Database**: [MongoDB](https://www.mongodb.com/) (with Mongoose)
-- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
-- **Email**: [Nodemailer](https://nodemailer.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
+### Frontend
+
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+
+### Backend
+
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+
+### Database
+
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+
+### Tools & Utilities
+
+![NextAuth](https://img.shields.io/badge/NextAuth.js-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Nodemailer](https://img.shields.io/badge/Nodemailer-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)
+![Lucide](https://img.shields.io/badge/Lucide-F05032?style=for-the-badge&logo=lucide&logoColor=white)
 
 ## Getting Started
 
