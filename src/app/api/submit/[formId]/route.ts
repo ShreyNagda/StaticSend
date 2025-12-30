@@ -101,6 +101,7 @@ export async function POST(
     const allowed = Array.isArray(form.allowedUrls)
       ? form.allowedUrls.map(normalize)
       : [];
+    const isStaticSend = reqOriginNorm.endsWith("staticsend.vercel.app");
     console.log(
       "Request Origin:",
       reqOrigin,
@@ -108,7 +109,7 @@ export async function POST(
       form.allowedUrls
     );
     if (allowed.length > 0) {
-      if (reqOriginNorm && allowed.includes(reqOriginNorm)) {
+      if ((reqOriginNorm && allowed.includes(reqOriginNorm)) || isStaticSend) {
         corsOrigin = reqOrigin || "*";
       } else {
         // Not allowed
