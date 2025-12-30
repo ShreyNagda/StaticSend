@@ -46,7 +46,7 @@ export async function PATCH(
 
     const { formId } = await params;
     const body = await req.json();
-    const { name, description, settings, isActive } = body;
+    const { name, description, settings, isActive, allowedUrls } = body;
 
     await connectDB();
 
@@ -61,6 +61,9 @@ export async function PATCH(
     if (isActive !== undefined) form.isActive = isActive;
     if (settings) {
       form.settings = { ...form.settings, ...settings };
+    }
+    if (allowedUrls) {
+      form.allowedUrls = allowedUrls;
     }
 
     await form.save();

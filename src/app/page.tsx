@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ChevronRight, CheckCircle2 } from "lucide-react";
 import TerminalCode from "@/components/shared/terminal-code";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
@@ -53,7 +53,7 @@ export default function Home() {
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-6"
                   >
                     Get Started for Free
-                    <ArrowRight size={16} />
+                    <ChevronRight size={16} />
                   </Button>
                 </Link>
                 <Link href="/docs" className="w-full sm:w-auto">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/shared/button";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 export default function CTA() {
   return (
@@ -18,7 +18,7 @@ export default function CTA() {
           <Link href="/auth/register" className="w-full sm:w-auto">
             <Button size="lg" className="w-full sm:w-auto px-8 py-6 text-lg">
               Get Started for Free
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ChevronRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>

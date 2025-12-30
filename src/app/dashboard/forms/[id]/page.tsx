@@ -5,7 +5,7 @@ import Form from "@/models/Form";
 import Submission from "@/models/Submission";
 import { notFound } from "next/navigation";
 import SubmissionsTable from "@/components/dashboard/submissions-table";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ChevronLeft, Settings } from "lucide-react";
 import Link from "next/link";
 import CopyButton from "@/components/shared/copy-button";
 import { Button } from "@/components/shared/button";
@@ -50,7 +50,7 @@ export default async function FormDetailsPage({
           className="text-sm text-gray-500 hover:text-black flex items-center gap-1 mb-4 transition-colors"
         >
           <Button variant="ghost" className="gap-1">
-            <ArrowLeft size={16} />
+            <ChevronLeft size={16} />
             Back to Dashboard
           </Button>
         </Link>

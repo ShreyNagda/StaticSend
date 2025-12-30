@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { TagsInput } from "@/components/shared/tags-input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Trash2, Save, ArrowLeft } from "lucide-react";
+import { Loader2, Trash2, Save, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/shared/button";
 import Link from "next/link";
 import { toast } from "react-toastify";
@@ -16,7 +17,8 @@ const formSchema = z.object({
   description: z.string().optional(),
   isActive: z.boolean(),
   emailNotifications: z.boolean(),
-  notificationEmails: z.string().optional(),
+  notificationEmails: z.array(z.string()).optional(),
+  allowedUrls: z.array(z.string()).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -31,6 +33,7 @@ interface FormSettingsProps {
       emailNotifications: boolean;
       notificationEmails?: string[];
     };
+    allowedUrls?: string[];
   };
 }
 
@@ -51,6 +54,8 @@ export default function FormSettings({ form }: FormSettingsProps) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,13 +63,13 @@ export default function FormSettings({ form }: FormSettingsProps) {
       description: form.description || "",
       isActive: form.isActive,
       emailNotifications: form.settings.emailNotifications,
-      notificationEmails: form.settings.notificationEmails?.join(", ") || "",
+      notificationEmails: form.settings.notificationEmails || [],
+      allowedUrls: form.allowedUrls || [],
     },
   });
 
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
-
     try {
       const res = await fetch(`/api/forms/${form._id}`, {
         method: "PATCH",
@@ -77,13 +82,9 @@ export default function FormSettings({ form }: FormSettingsProps) {
           isActive: data.isActive,
           settings: {
             emailNotifications: data.emailNotifications,
-            notificationEmails: data.notificationEmails
-              ? data.notificationEmails
-                  .split(",")
-                  .map((e) => e.trim())
-                  .filter(Boolean)
-              : [],
+            notificationEmails: data.notificationEmails || [],
           },
+          allowedUrls: data.allowedUrls || [],
         }),
       });
 
@@ -191,7 +192,7 @@ export default function FormSettings({ form }: FormSettingsProps) {
           className="text-sm text-gray-500 hover:text-black flex items-center gap-1 mb-4 transition-colors"
         >
           <Button variant="ghost" className="gap-1">
-            <ArrowLeft size={16} />
+            <ChevronLeft size={16} />
             Back to Form
           </Button>
         </Link>
@@ -274,12 +275,30 @@ export default function FormSettings({ form }: FormSettingsProps) {
             <p className="text-sm text-gray-500 mb-2">
               Enter email addresses separated by commas.
             </p>
-            <input
-              id="notificationEmails"
-              {...register("notificationEmails")}
-              placeholder="email@example.com, another@example.com"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all"
+            <TagsInput
+              value={watch("notificationEmails") || []}
+              onChange={(tags) => setValue("notificationEmails", tags)}
+              placeholder="email@example.com"
+              disabled={isLoading}
             />
+            <div className="pt-4 border-t border-gray-100">
+              <label
+                htmlFor="allowedUrls"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Allowed Origins (CORS)
+              </label>
+              <p className="text-sm text-gray-500 mb-2">
+                Enter allowed origins (e.g. https://yourdomain.com) as tags.
+                Leave blank to allow all origins.
+              </p>
+              <TagsInput
+                value={watch("allowedUrls") || []}
+                onChange={(tags) => setValue("allowedUrls", tags)}
+                placeholder="https://example.com"
+                disabled={isLoading}
+              />
+            </div>
           </div>
         </div>
 
@@ -324,6 +343,7 @@ export default function FormSettings({ form }: FormSettingsProps) {
               type="button"
               variant={form.isActive ? "danger" : "secondary"}
               onClick={() => setShowDisableDialog(true)}
+              size="sm"
               disabled={isToggling}
             >
               {isToggling ? (
@@ -356,6 +376,7 @@ export default function FormSettings({ form }: FormSettingsProps) {
               />
               <Button
                 variant="danger"
+                size="sm"
                 type="button"
                 onClick={() => {
                   if (!transferEmail) {
@@ -371,30 +392,34 @@ export default function FormSettings({ form }: FormSettingsProps) {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-red-200">
-            <h3 className="text-base font-medium text-red-900 mb-2">
-              Delete Form
-            </h3>
-            <p className="text-sm text-red-700 mb-4">
-              Deleting this form will permanently remove all associated
-              submissions and data. This action cannot be undone.
-            </p>
+          <div className="flex items-center pt-6 border-t border-red-200">
+            <div className="w-full">
+              <h3 className="text-base font-medium text-red-900 mb-2">
+                Delete Form
+              </h3>
+              <p className="text-sm text-red-700 mb-4">
+                Deleting this form will permanently remove all associated
+                submissions and data.
+                <br /> This action cannot be undone.
+              </p>
+            </div>
             <Button
               variant="danger"
               type="button"
+              size="sm"
               onClick={() => setShowDeleteDialog(true)}
               disabled={isDeleting}
               className="w-full sm:w-auto"
             >
               {isDeleting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
                   Deleting...
                 </>
               ) : (
                 <>
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete Form
+                  <Trash2 className="mr-2 h-3 w-3" />
+                  Delete
                 </>
               )}
             </Button>
