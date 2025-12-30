@@ -70,7 +70,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <ToastContainer
-            position="bottom-right"
+            position="top-right"
             hideProgressBar
             closeOnClick
             closeButton
