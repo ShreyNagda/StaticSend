@@ -172,8 +172,12 @@ export default function FormSettings({ form }: FormSettingsProps) {
       toast.success("Form transferred successfully");
       router.push("/dashboard");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to transfer form");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to transfer form");
+      } else {
+        toast.error("Failed to transfer form");
+      }
       setIsTransferring(false);
       setShowTransferDialog(false);
     }
@@ -186,7 +190,7 @@ export default function FormSettings({ form }: FormSettingsProps) {
           href={`/dashboard/forms/${form._id}`}
           className="text-sm text-gray-500 hover:text-black flex items-center gap-1 mb-4 transition-colors"
         >
-          <Button variant="ghost">
+          <Button variant="ghost" className="gap-1">
             <ArrowLeft size={16} />
             Back to Form
           </Button>

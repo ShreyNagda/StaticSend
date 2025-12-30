@@ -4,6 +4,7 @@ import Form from "@/models/Form";
 import Submission from "@/models/Submission";
 import User from "@/models/User";
 import { sendEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -20,6 +21,28 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ formId: string }> }
 ) {
+  // Get IP address from request headers (works for Vercel/Next.js)
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown";
+
+  const limit = rateLimit(ip);
+  if (!limit.success) {
+    return NextResponse.json(
+      { message: `Too many requests. Try again later.` },
+      {
+        status: 429,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Retry-After": Math.ceil(
+            (limit.reset - Date.now()) / 1000
+          ).toString(),
+        },
+      }
+    );
+  }
+
   try {
     const { formId } = await params;
 
